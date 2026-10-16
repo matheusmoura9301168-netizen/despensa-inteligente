@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: despensa_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-despensa}
+      POSTGRES_USER: ${POSTGRES_USER:-despensa_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-despensa_pass}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-despensa_user} -d ${POSTGRES_DB:-despensa}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: despensa_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@despensa.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  pgadmin_data:
