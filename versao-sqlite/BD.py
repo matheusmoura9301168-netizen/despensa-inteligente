@@ -403,7 +403,7 @@ def verificar_base_dados() -> bool:
 #
 # As nossas tabelas:
 #   - despensa      → ingredientes do utilizador
-#   - receitas      → as 20 receitas pré-carregadas
+#   - receitas      → as receitas pré-carregadas
 #   - ingredientes_receita → ingredientes de cada receita
 # ───────────────────────────────────────────────────────────────────────────────────────────
 
@@ -453,7 +453,7 @@ CREATE INDEX IF NOT EXISTS idx_despensa_nome ON despensa(nome COLLATE NOCASE);
 CREATE INDEX IF NOT EXISTS idx_ing_receita   ON ingredientes_receita(id_receita);
 """
 
-# ── Lista de 20 receitas de exemplo ───────────────────────────────────────
+# ── Lista de receitas de exemplo ───────────────────────────────────────
 # Cada receita é um dicionário Python com os campos da tabela "receitas"
 # e uma lista de "ingredientes" para a tabela "ingredientes_receita".
 #
@@ -1375,7 +1375,7 @@ def executar_migracoes() -> None:
     """
     Prepara a base de dados para uso:
       1. Cria as tabelas (se ainda não existirem)
-      2. Insere as 20 receitas de exemplo (apenas se a tabela estiver vazia)
+      2. Insere as receitas de exemplo (apenas se a tabela estiver vazia)
 
     Esta função é segura para correr várias vezes: o SQL usa "IF NOT EXISTS"
     e verificamos se já existem receitas antes de inserir.
@@ -1406,7 +1406,7 @@ def executar_migracoes() -> None:
 
 def _inserir_receitas_exemplo(conexao: sqlite3.Connection) -> None:
     """
-    Insere as 20 receitas de exemplo se a tabela 'receitas' estiver vazia.
+    Insere as receitas de exemplo se a tabela 'receitas' estiver vazia.
 
     O prefixo _ (underscore) indica que esta é uma função "interna" —
     só deve ser chamada dentro deste ficheiro, não por outros módulos.
@@ -1428,7 +1428,7 @@ def _inserir_receitas_exemplo(conexao: sqlite3.Connection) -> None:
         print(f"Já existem {total_existente} receitas na base de dados.")
         return
 
-    print("A inserir 20 receitas de exemplo...")
+    print(f"A inserir {len(RECEITAS_EXEMPLO)} receitas de exemplo...")
 
     for receita in RECEITAS_EXEMPLO:
         # INSERT INTO insere uma nova linha na tabela.
